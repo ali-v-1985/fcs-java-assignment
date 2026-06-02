@@ -8,7 +8,7 @@ Some parts of the code contain methods that are already defined but currently th
 
 Also, just a minimum set of tests are present, feel free to bring more as well to craft the tests related to the implementations you will work on.
 
-**Before starting the tasks, it is important to [read the brief overview](BRIEFING.md) that provides essential information about the domain, entities, business rules, and other relevant details.**
+**Before starting the tasks, it is important to [read the brief overview](../case-study/BRIEFING.md) that provides essential information about the domain, entities, business rules, and other relevant details.**
 
 ## Tasks
 
