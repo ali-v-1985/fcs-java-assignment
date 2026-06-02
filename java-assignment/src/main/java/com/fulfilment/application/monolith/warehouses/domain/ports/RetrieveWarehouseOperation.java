@@ -1,7 +1,11 @@
 package com.fulfilment.application.monolith.warehouses.domain.ports;
 
 import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
+import java.util.List;
 
-public interface ReplaceWarehouseOperation {
-  Warehouse replace(String businessUnitCode, Warehouse warehouse);
+public interface RetrieveWarehouseOperation {
+
+  List<Warehouse> listAll();
+
+  Warehouse getById(Long id);
 }

@@ -7,11 +7,13 @@ public interface WarehouseStore {
 
   List<Warehouse> getAll();
 
-  void create(Warehouse warehouse);
+  Warehouse create(Warehouse warehouse);
 
   void update(Warehouse warehouse);
 
-  void remove(Warehouse warehouse);
+  Warehouse findActiveById(Long id);
 
-  Warehouse findByBusinessUnitCode(String buCode);
+  Warehouse findActiveByBusinessUnitCode(String businessUnitCode);
+
+  List<Warehouse> findActiveByLocation(String location);
 }

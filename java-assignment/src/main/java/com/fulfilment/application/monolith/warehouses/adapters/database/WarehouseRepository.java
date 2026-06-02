@@ -11,30 +11,64 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
 
   @Override
   public List<Warehouse> getAll() {
-    return this.listAll().stream().map(DbWarehouse::toWarehouse).toList();
+    return this.list("archivedAt is null").stream()
+        .map(DbWarehouse::toWarehouse)
+        .toList();
   }
 
   @Override
-  public void create(Warehouse warehouse) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'create'");
+  public Warehouse create(Warehouse warehouse) {
+    var dbWarehouse = toDbWarehouse(warehouse);
+    persist(dbWarehouse);
+    return dbWarehouse.toWarehouse();
   }
 
   @Override
   public void update(Warehouse warehouse) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'replace'");
+    var dbWarehouse = findById(warehouse.id);
+    if (dbWarehouse == null) {
+      return;
+    }
+
+    dbWarehouse.businessUnitCode = warehouse.businessUnitCode;
+    dbWarehouse.location = warehouse.location;
+    dbWarehouse.capacity = warehouse.capacity;
+    dbWarehouse.stock = warehouse.stock;
+    dbWarehouse.createdAt = warehouse.createdAt;
+    dbWarehouse.archivedAt = warehouse.archivedAt;
   }
 
   @Override
-  public void remove(Warehouse warehouse) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'remove'");
+  public Warehouse findActiveById(Long id) {
+    return find("id = ?1 and archivedAt is null", id).firstResultOptional()
+        .map(DbWarehouse::toWarehouse)
+        .orElse(null);
   }
 
   @Override
-  public Warehouse findByBusinessUnitCode(String buCode) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findById'");
+  public Warehouse findActiveByBusinessUnitCode(String businessUnitCode) {
+    return find("businessUnitCode = ?1 and archivedAt is null", businessUnitCode)
+        .firstResultOptional()
+        .map(DbWarehouse::toWarehouse)
+        .orElse(null);
+  }
+
+  @Override
+  public List<Warehouse> findActiveByLocation(String location) {
+    return list("location = ?1 and archivedAt is null", location).stream()
+        .map(DbWarehouse::toWarehouse)
+        .toList();
+  }
+
+  private DbWarehouse toDbWarehouse(Warehouse warehouse) {
+    var dbWarehouse = new DbWarehouse();
+    dbWarehouse.id = warehouse.id;
+    dbWarehouse.businessUnitCode = warehouse.businessUnitCode;
+    dbWarehouse.location = warehouse.location;
+    dbWarehouse.capacity = warehouse.capacity;
+    dbWarehouse.stock = warehouse.stock;
+    dbWarehouse.createdAt = warehouse.createdAt;
+    dbWarehouse.archivedAt = warehouse.archivedAt;
+    return dbWarehouse;
   }
 }

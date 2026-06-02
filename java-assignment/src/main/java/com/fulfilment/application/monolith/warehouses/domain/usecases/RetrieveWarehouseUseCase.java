@@ -2,30 +2,32 @@ package com.fulfilment.application.monolith.warehouses.domain.usecases;
 
 import com.fulfilment.application.monolith.warehouses.domain.exceptions.WarehouseNotFoundException;
 import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
-import com.fulfilment.application.monolith.warehouses.domain.ports.ArchiveWarehouseOperation;
+import com.fulfilment.application.monolith.warehouses.domain.ports.RetrieveWarehouseOperation;
 import com.fulfilment.application.monolith.warehouses.domain.ports.WarehouseStore;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @ApplicationScoped
-public class ArchiveWarehouseUseCase implements ArchiveWarehouseOperation {
+public class RetrieveWarehouseUseCase implements RetrieveWarehouseOperation {
 
   private final WarehouseStore warehouseStore;
 
-  public ArchiveWarehouseUseCase(WarehouseStore warehouseStore) {
+  public RetrieveWarehouseUseCase(WarehouseStore warehouseStore) {
     this.warehouseStore = warehouseStore;
   }
 
   @Override
-  @Transactional
-  public void archive(Long id) {
-    Warehouse warehouse = warehouseStore.findActiveById(id);
+  public List<Warehouse> listAll() {
+    return warehouseStore.getAll();
+  }
+
+  @Override
+  public Warehouse getById(Long id) {
+    var warehouse = warehouseStore.findActiveById(id);
     if (warehouse == null) {
       throw new WarehouseNotFoundException("Warehouse with id " + id + " does not exist.");
     }
 
-    warehouse.archivedAt = LocalDateTime.now();
-    warehouseStore.update(warehouse);
+    return warehouse;
   }
 }

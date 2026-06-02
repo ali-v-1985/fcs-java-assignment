@@ -2,9 +2,11 @@ package com.fulfilment.application.monolith.location;
 
 import com.fulfilment.application.monolith.warehouses.domain.models.Location;
 import com.fulfilment.application.monolith.warehouses.domain.ports.LocationResolver;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
+@ApplicationScoped
 public class LocationGateway implements LocationResolver {
 
   private static final Map<String, Location> LOCATIONS_BY_IDENTIFIER =
