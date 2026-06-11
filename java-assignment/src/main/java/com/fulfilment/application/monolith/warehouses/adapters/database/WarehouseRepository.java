@@ -25,9 +25,16 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
 
   @Override
   public void update(Warehouse warehouse) {
+    // Validate ID presence to avoid silently no-op updates which mask caller bugs
+    if (warehouse == null || warehouse.id == null) {
+      throw new com.fulfilment.application.monolith.warehouses.domain.exceptions.WarehouseValidationException(
+          "Warehouse id must be present for update.");
+    }
+
     var dbWarehouse = findById(warehouse.id);
     if (dbWarehouse == null) {
-      return;
+      throw new com.fulfilment.application.monolith.warehouses.domain.exceptions.WarehouseNotFoundException(
+          "Warehouse with id of " + warehouse.id + " does not exist.");
     }
 
     dbWarehouse.businessUnitCode = warehouse.businessUnitCode;

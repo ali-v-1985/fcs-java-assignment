@@ -11,10 +11,16 @@ import org.jboss.resteasy.reactive.server.SimpleResourceInfo;
 @ApplicationScoped
 public class WarehouseCreateStatusFilter {
 
+  public static final String CREATE_ANEW_WAREHOUSE_UNIT = "createANewWarehouseUnit";
+  public static final String REPLACE_THE_CURRENT_ACTIVE_WAREHOUSE = "replaceTheCurrentActiveWarehouse";
+
   @ServerResponseFilter
   public void setCreatedStatusForWarehouseCreation(
       SimpleResourceInfo resourceInfo, ContainerResponseContext responseContext) {
-    if ("createANewWarehouseUnit".equals(resourceInfo.getMethodName())
+    // Treat both create and replacement endpoints as resource-creation operations
+    var method = resourceInfo.getMethodName();
+    if ((CREATE_ANEW_WAREHOUSE_UNIT.equals(method)
+            || REPLACE_THE_CURRENT_ACTIVE_WAREHOUSE.equals(method))
         && responseContext.getStatus() == Response.Status.OK.getStatusCode()) {
       responseContext.setStatus(Response.Status.CREATED.getStatusCode());
     }

@@ -221,7 +221,7 @@ public class WarehouseEndpointTest {
         .when()
         .post("/warehouse/MWH.REPLACE/replacement")
         .then()
-        .statusCode(200)
+        .statusCode(201)
         .body("businessUnitCode", equalTo("MWH.REPLACE"))
         .body("location", equalTo("AMSTERDAM-002"))
         .body("capacity", equalTo(40))
